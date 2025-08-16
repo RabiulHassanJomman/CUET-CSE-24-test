@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="assets/icons/favicon-main.svg"
+    />
+    <link rel="icon" type="image/png" href="assets/icons/favicon-main.png" />
+    <title>CUET CSE-24</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  </head>
+  <body>
+    
+    <!-- Dynamic CSE Geometric Background -->
+    <div class="geometric-background">
+      <div class="geometric-shape shape-1"></div>
+      <div class="geometric-shape shape-2"></div>
+      <div class="geometric-shape shape-3"></div>
+      <div class="geometric-shape shape-4"></div>
+      <div class="geometric-shape shape-5"></div>
+      <div class="geometric-shape shape-6"></div>
+      <div class="geometric-shape shape-7"></div>
+      <div class="geometric-shape shape-8"></div>
+      <div class="circuit-lines">
+        <div class="circuit-line line-1"></div>
+        <div class="circuit-line line-2"></div>
+        <div class="circuit-line line-3"></div>
+        <div class="circuit-line line-4"></div>
+      </div>
+      <div class="binary-particles">
+        <span class="particle">1</span>
+        <span class="particle">0</span>
+        <span class="particle">1</span>
+        <span class="particle">0</span>
+        <span class="particle">1</span>
+        <span class="particle">0</span>
+        <span class="particle">1</span>
+        <span class="particle">0</span>
+      </div>
+    </div>
+    <div class="image-container">
+      <img src="assets/images/cover.jpg" alt="cover" id="cover-photo" />
+      <!-- Admin Panel Button - Between Photo and Text -->
+      <div id="admin-panel-container">
+        <a href="admin/admin.html" id="admin-panel-link" title="Admin Panel" target="_blank">
+          <span class="admin-icon">⚙️</span>
+          <span class="admin-text">Admin</span>
+        </a>
+      </div>
+      <div class="text-container">
+        <p id="text"></p>
+        <!-- Events Button -->
+         <div id="buttons-container">
+          <div id="events-button-container">
+            <button id="events-button" onclick="openEventsModal()">
+              📅 Upcoming Events
+            </button>
+          </div>
+          <!-- Routines Button -->
+          <div id="routines-button-container">
+            <button id="routines-button" onclick="openRoutinesModal()">
+              📚 Course Resources
+            </button>
+          </div>
+          <!-- Notice Button -->
+          <div id="notice-button-container">
+            <button id="notice-button" onclick="openNoticeModal()">
+              📢 Notices
+            </button>
+          </div>
+          <!-- Routine Button -->
+          <div id="routine-button-container">
+            <button id="routine-button" onclick="openRoutineModal()">
+              📅 Class Routine
+            </button>
+          </div>
+         </div>
+        
+        <div class="separator-line"></div>
+        <h2 id="family-text">Our Family</h2>
+      </div>
+    </div>
+
+
+
+    <!-- Search Section -->
+    <div class="search-section">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="🔍 Search members by name, ID, home, college, or bio..." />
+        
+        <button id="clearSearchBtn" class="clear-btn" style="display: none;">Clear</button>
+      </div>
+      <div class="search-results">
+        <div id="searchResults" class="results-container"></div>
+        <div id="searchStats" class="search-stats"></div>
+      </div>
+    </div>
+
+    <div id="member-container">
+      <div id="members"></div>
+    </div>
+
+    <!-- Modal for bigger card -->
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal-card">
+        <button class="modal-close" id="modalClose"></button>
+        <h3 id="modalName"></h3>
+        <p id="modalId"></p>
+        <p id="modalHome"></p>
+        <p id="modalCollege"></p>
+        <p id="modalSchool"></p>
+        <p id="modalFacebook"></p>
+        <p id="modalBio"></p>
+      </div>
+    </div>
+
+    <!-- Events Modal -->
+    <div class="modal-overlay" id="eventsModalOverlay">
+      <div class="modal-card events-modal">
+        <div class="events-modal-header">
+          <h2 id="events-modal-title">📅 Upcoming Events</h2>
+          <button class="modal-close" id="eventsModalClose">&times;</button>
+        </div>
+        <div id="events-modal-list"></div>
+      </div>
+    </div>
+
+    <!-- Routines Modal -->
+    <div class="modal-overlay" id="routinesModalOverlay">
+      <div class="modal-card routines-modal">
+        <div class="routines-modal-header">
+          <h2 id="routines-modal-title">📚 Course Resources</h2>
+          <button class="modal-close" id="routinesModalClose">&times;</button>
+        </div>
+        <div class="routines-content">
+          <div class="courses-section">
+            <h3>Available Courses</h3>
+            <div id="courses-list"></div>
+          </div>
+          <div class="resources-section">
+            <div class="resources-tabs">
+              <button class="resource-tab active" data-resource="notes">📝 Notes</button>
+              <button class="resource-tab" data-resource="slides">📊 Lecture Slides</button>
+              <button class="resource-tab" data-resource="student-notes">👨‍🎓 Student Notes</button>
+            </div>
+            <div class="section-filters">
+              <button class="section-filter active" data-section="all">All Sections</button>
+              <button class="section-filter" data-section="A">Section A</button>
+              <button class="section-filter" data-section="B">Section B</button>
+            </div>
+            <div class="resources-content">
+              <div id="course-notes" class="resource-panel active"></div>
+              <div id="course-slides" class="resource-panel"></div>
+              <div id="course-student-notes" class="resource-panel"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notice Modal -->
+    <div class="modal-overlay" id="noticeModalOverlay">
+      <div class="modal-card notice-modal">
+        <div class="notice-modal-header">
+          <h2 id="notice-modal-title">📢 Notices</h2>
+          <button class="modal-close" id="noticeModalClose">&times;</button>
+        </div>
+        <div class="notice-content">
+          <div class="notice-filters">
+            <button class="notice-filter active" data-filter="all">All</button>
+            <button class="notice-filter" data-filter="urgent">🚨 Urgent</button>
+            <button class="notice-filter" data-filter="academic">📚 Academic</button>
+            <button class="notice-filter" data-filter="general">📋 General</button>
+          </div>
+          <div id="notice-list" class="notice-list">
+            <!-- Notices will be populated here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Routine Modal -->
+    <div class="modal-overlay" id="routineModalOverlay">
+      <div class="modal-card routine-modal">
+        <div class="routine-modal-header">
+          <h2 id="routine-modal-title">📅 Class Routine</h2>
+          <button class="modal-close" id="routineModalClose">&times;</button>
+        </div>
+        <div class="routine-content">
+          <div class="routine-filters">
+            <button class="routine-filter active" data-subsection="A1">A1</button>
+            <button class="routine-filter" data-subsection="A2">A2</button>
+            <button class="routine-filter" data-subsection="B1">B1</button>
+            <button class="routine-filter" data-subsection="B2">B2</button>
+          </div>
+          <div class="day-filters">
+            <button class="day-filter active" data-day="all">All Days</button>
+            <button class="day-filter" data-day="sunday">Sunday</button>
+            <button class="day-filter" data-day="monday">Monday</button>
+            <button class="day-filter" data-day="tuesday">Tuesday</button>
+            <bujommantton class="day-filter" data-day="wednesday">Wednesday</bujommantton>
+            <button class="day-filter" data-day="thursday">Thursday</button>
+          </div>
+          <div class="routine-display">
+            <div id="routine-table" class="routine-table">
+              <!-- Routine table will be populated here -->
+            </div>
+            <div id="extra-classes" class="extra-classes">
+              <!-- Extra classes will be shown here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p style="text-align: center; margin-top: 20px; color: #fff; font-size: 14px; font-family: 'Source Code Pro', monospace;">Made with ❤️ by <a href="https://www.facebook.com/rabiul.hassan.jomman">Jomman</a></p>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/index.js"></script>
+  </body>
+</html>
